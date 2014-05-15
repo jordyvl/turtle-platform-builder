@@ -1,0 +1,65 @@
+-- Turtle platform builder, builds a square platform using whatever stuff is in it's inventory
+-- put fuel in any slot.
+-- USAGE:     platform 10    (default is 8)
+-- will build a 10x10 platform, one block below the turtle's position starting at the front-left of the platform
+-- try to put fuel AFTER the blocks he's placing, otherwise he might try to place the fuel
+
+-- this function places a whole row of stuff
+function placeArow()
+ for row=1,size-1 do
+  k=1
+  local count=0
+  while count<1 do
+   count=turtle.getItemCount(k)
+   k=k+1
+   if (k>16) then
+    print("No more materials! add some...it's ok, I'll wait...")
+    os.sleep(10)
+    k=1;
+   end --endif 
+  end  --endwhile
+  turtle.select(k-1)
+  turtle.placeDown()
+  turtle.forward()
+  end  -- next row
+  turtle.placeDown()
+ end
+
+ function grabFuel()
+ for i=1,16 do
+  turtle.select(i)
+  turtle.refuel()
+ end
+end
+
+-------------------  START
+args = {...}
+size = args[1]
+if (size=="") then
+ size=8
+end
+
+print ("building platform of "..size.." x "..size..", "..turtle.getFuelLevel().." Fuel left..")
+grabFuel()
+
+for column=1,math.floor(size/2) do
+ placeArow()
+ turtle.turnRight()
+ turtle.forward()
+ turtle.turnRight()
+
+ grabFuel()
+
+ placeArow()
+ turtle.turnLeft()
+ turtle.forward()
+ turtle.turnLeft()
+end -- next column
+
+turtle.turnLeft()
+for i=1,size do
+ turtle.forward()
+end
+turtle.turnRight()
+print("I'm done here, hope you like my work.")
+sleep(3)
